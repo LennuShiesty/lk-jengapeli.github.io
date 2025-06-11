@@ -59,7 +59,7 @@
 
     .otsikkologo {
       max-width: 200px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .numeronapit {
@@ -68,6 +68,8 @@
       justify-content: center;
       gap: 1px;
       margin-top: 20px;
+      max-height: 250px;
+      overflow-y: auto;
     }
 
     .numeronappi {
@@ -85,43 +87,46 @@
       background-color: lightgreen;
       color: black;
     }
-
+    
     .valinta-rivi {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       margin: 20px auto;
       max-width: 500px;
     }
 
-    .valitsin-lohko {
-      text-align: left;
-    }
+    @media (max-width: 600px) {
+      .otsikkologo {
+        max-width: 120px;
+        margin-top: 5px;
+      }
 
-    .valitsin-lohko label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .nollaus-nappi {
-      margin-top: 38px; /* hienosäädä tätä jos haluat vielä tarkemmin */
+      .valinta-rivi {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Oikean yläkulman logo -->
   <img src="logo2.png" alt="Logo" class="logo-topright">
+
+  <!-- Otsikkokuvana logo (Jenga-logo) -->
   <img src="jengaLogo2.png" alt="Jenga logo" class="otsikkologo">
+
   <div class="subtitle">made by L-K</div>
 
   <div class="valinta-rivi">
-    <div class="valitsin-lohko">
-      <label for="pelimuoto">Valitse pelimuoto:</label>
+    <div>
+      <p>Valitse pelimuoto:</p>
       <select id="pelimuoto" onchange="resetoiPeli()">
         <option value="HC">HC juomapeli</option>
         <option value="Sosiaalinen">Sosiaalinen</option>
       </select>
     </div>
-    <button class="nollaus-nappi" onclick="resetoiPeli()">Nollaa peli</button>
+    <button onclick="resetoiPeli()">Nollaa peli</button>
   </div>
 
   <div class="numeronapit" id="numerot"></div>
