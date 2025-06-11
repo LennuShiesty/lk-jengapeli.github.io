@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jenga</title>
   <style>
     body {
@@ -17,11 +17,67 @@
     select, button, input {
       font-size: 1.2em;
       padding: 10px;
-      margin: 10px;
+      margin: 10px 10px 10px 0;
       background-color: #333;
       color: white;
       border: none;
       border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button {
+      margin-left: 0;
+    }
+
+    .valinta-rivi {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      max-width: 500px;
+      gap: 10px;
+    }
+
+    /* Numeroiden nappeja ympäröivä laatikko */
+    .numeronapit-container {
+      max-width: 550px;
+      margin: 0 auto;
+      border: 2px solid #666; /* harmaa reunus */
+      padding: 10px;
+      border-radius: 8px;
+      background-color: transparent;
+      box-shadow: none;
+      /* POISTETTU max-height ja overflow täältä,
+         koska skrollaus laitetaan media queryllä */
+    }
+
+    .numeronapit {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .numeronappi {
+      width: 40px;
+      height: 40px;
+      font-size: 1em;
+      border-radius: 5px;
+      background-color: #222;
+      color: white;
+      border: 1px solid #444;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .numeronappi:hover {
+      background-color: #555;
+    }
+
+    .valittu {
+      background-color: lightgreen;
+      color: black;
     }
 
     .tehtava {
@@ -62,74 +118,64 @@
       margin-top: 10px;
     }
 
-    .numeronapit {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1px;
-      margin-top: 20px;
-      max-height: 250px;
-      overflow-y: auto;
-    }
-
-    .numeronappi {
-      width: 40px;
-      height: 40px;
-      font-size: 1em;
-      border-radius: 5px;
-      background-color: #222;
-      color: white;
-      border: 1px solid #444;
-      cursor: pointer;
-    }
-
-    .valittu {
-      background-color: lightgreen;
-      color: black;
-    }
-    
-    .valinta-rivi {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 20px auto;
-      max-width: 500px;
-    }
-
+    /* Media query puhelimille - skrollaus päälle, max-height ja fixed korkeus */
     @media (max-width: 600px) {
+      .numeronapit-container {
+        max-height: 260px;
+        overflow-y: auto;
+      }
+
       .otsikkologo {
         max-width: 120px;
         margin-top: 5px;
       }
 
       .valinta-rivi {
-        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
         gap: 10px;
+      }
+
+      select, button {
+        font-size: 1em;
+        padding: 8px;
+        margin: 10px 5px 10px 0;
+      }
+
+      .numeronappi {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9em;
+      }
+
+      .numeronapit-container {
+        max-width: 100%;
+        padding: 8px;
       }
     }
   </style>
 </head>
 <body>
   <!-- Oikean yläkulman logo -->
-  <img src="logo2.png" alt="Logo" class="logo-topright">
+  <img src="logo2.png" alt="Logo" class="logo-topright" />
 
-  <!-- Otsikkokuvana logo (Jenga-logo) -->
-  <img src="jengaLogo2.png" alt="Jenga logo" class="otsikkologo">
+  <!-- Jenga logo ylhäällä -->
+  <img src="jengaLogo2.png" alt="Jenga logo" class="otsikkologo" />
 
   <div class="subtitle">made by L-K</div>
 
   <div class="valinta-rivi">
-    <div>
-      <p>Valitse pelimuoto:</p>
-      <select id="pelimuoto" onchange="resetoiPeli()">
-        <option value="HC">HC juomapeli</option>
-        <option value="Sosiaalinen">Sosiaalinen</option>
-      </select>
-    </div>
+    <select id="pelimuoto" onchange="resetoiPeli()">
+      <option value="HC">HC juomapeli</option>
+      <option value="Sosiaalinen">Sosiaalinen</option>
+    </select>
     <button onclick="resetoiPeli()">Nollaa peli</button>
   </div>
 
-  <div class="numeronapit" id="numerot"></div>
+  <div class="numeronapit-container">
+    <div class="numeronapit" id="numerot"></div>
+  </div>
+
   <div class="tehtava" id="tehtava"></div>
 
   <script>
