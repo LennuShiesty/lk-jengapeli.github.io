@@ -66,7 +66,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 8px;
+      gap: 1px;
       margin-top: 20px;
     }
 
@@ -85,28 +85,47 @@
       background-color: lightgreen;
       color: black;
     }
+
+    .valinta-rivi {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin: 20px auto;
+      max-width: 500px;
+    }
+
+    .valitsin-lohko {
+      text-align: left;
+    }
+
+    .valitsin-lohko label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .nollaus-nappi {
+      margin-top: 38px; /* hienosäädä tätä jos haluat vielä tarkemmin */
+    }
   </style>
 </head>
 <body>
-  <!-- Oikean yläkulman logo -->
   <img src="logo2.png" alt="Logo" class="logo-topright">
-
-  <!-- Otsikkokuvana logo -->
   <img src="jengaLogo2.png" alt="Jenga logo" class="otsikkologo">
-
   <div class="subtitle">made by L-K</div>
 
-  <p>Valitse pelimuoto:</p>
-  <select id="pelimuoto" onchange="resetoiPeli()">
-    <option value="HC">HC juomapeli</option>
-    <option value="Sosiaalinen">Sosiaalinen</option>
-  </select>
+  <div class="valinta-rivi">
+    <div class="valitsin-lohko">
+      <label for="pelimuoto">Valitse pelimuoto:</label>
+      <select id="pelimuoto" onchange="resetoiPeli()">
+        <option value="HC">HC juomapeli</option>
+        <option value="Sosiaalinen">Sosiaalinen</option>
+      </select>
+    </div>
+    <button class="nollaus-nappi" onclick="resetoiPeli()">Nollaa peli</button>
+  </div>
 
   <div class="numeronapit" id="numerot"></div>
-
   <div class="tehtava" id="tehtava"></div>
-
-  <button onclick="resetoiPeli()">Nollaa peli</button>
 
   <script>
     const data = {
