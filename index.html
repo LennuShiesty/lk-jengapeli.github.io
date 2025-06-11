@@ -11,6 +11,7 @@
       padding: 20px;
       background-color: #121212;
       color: #f0f0f0;
+      margin: 0;
     }
 
     select, button, input {
@@ -48,19 +49,17 @@
       margin-bottom: 20px;
     }
 
-    .logo {
+    .logo-topright {
       position: absolute;
-      width: 80px;
-    }
-
-    .logo.left {
       top: 10px;
-      left: 10px;
+      right: 10px;
+      width: 70px;
+      height: auto;
     }
 
-    .logo.right {
-      bottom: 10px;
-      right: 10px;
+    .otsikkologo {
+      max-width: 200px;
+      margin-top: 20px;
     }
 
     .numeronapit {
@@ -86,22 +85,16 @@
       background-color: lightgreen;
       color: black;
     }
-	
-	.otsikkologo {
-      max-width: 250px;
-      margin: 0 auto 10px;
-      display: block;
-}
-
   </style>
 </head>
 <body>
-  <img src="logo.jpg" alt="Logo vasen" class="logo left">
-  <img src="logo.jpg" alt="Logo oikea" class="logo right">
+  <!-- Oikean yläkulman logo -->
+  <img src="logo2.png" alt="Logo" class="logo-topright">
 
-  <img src="jengaLogo.jpg" alt="Jenga logo" class="otsikkologo">
+  <!-- Otsikkokuvana logo -->
+  <img src="jengaLogo2.png" alt="Jenga logo" class="otsikkologo">
+
   <div class="subtitle">made by L-K</div>
-
 
   <p>Valitse pelimuoto:</p>
   <select id="pelimuoto" onchange="resetoiPeli()">
