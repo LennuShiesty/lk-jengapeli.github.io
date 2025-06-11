@@ -2,58 +2,114 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HC Jengapeli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jenga</title>
   <style>
     body { font-family: sans-serif; text-align: center; padding: 20px; }
-    select, button { font-size: 1.2em; padding: 10px; margin: 10px; }
-    .tehtävä { font-size: 1.4em; margin-top: 30px; font-weight: bold; }
+    select, button { font-size: 1.2em; padding: 10px; margin: 10px 5px; }
+    .tehtävä { font-size: 1.4em; margin-top: 30px; font-weight: bold; min-height: 40px; }
+    .subtitle { font-size: 0.9em; color: gray; margin-top: -10px; margin-bottom: 20px; }
+    .numerot { margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .numerot button {
+      width: 40px; height: 40px; margin: 3px; font-size: 1em;
+      cursor: pointer; border-radius: 5px;
+      border: 1px solid #ccc;
+      transition: background-color 0.3s;
+    }
+    .numerot button:hover {
+      background-color: #ddd;
+    }
+    .numerot button.selected {
+      background-color: #007BFF;
+      color: white;
+      border-color: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h1>HC Jengapeli</h1>
-  <p>Valitse pelimuoto ja numeroitu palikka:</p>
-  <select id="pelimuoto">
+  <h1>Jenga</h1>
+  <div class="subtitle">made by L-K</div>
+
+  <p>Valitse pelimuoto:</p>
+  <select id="pelimuoto" onchange="päivitäNumerot()">
     <option value="HC">HC juomapeli</option>
     <option value="Sosiaalinen">Sosiaalinen</option>
   </select>
-  <input type="number" id="numero" placeholder="Palikan numero (1–52)" min="1" max="52" />
-  <br>
-  <button onclick="näytäTehtävä()">Näytä tehtävä</button>
-  <div class="tehtävä" id="tehtävä"></div>
+
+  <p>Valitse palikan numero:</p>
+  <div class="numerot" id="numerot"></div>
+
+  <div class="tehtävä" id="tehtävä">Valitse numero nähdäksesi tehtävän</div>
 
   <script>
     const data = {
       "HC": [
-        "Shotti", "Shotti", "Shotti", "Shotti", "Kasari :D", "Ota uusi palikka", "Ota uusi palikka",
-        "Ota uusi palikka", "Uusi heikolla kädellä", "Uusi heikolla kädellä", "Sääntö", "Sääntö",
-        "Sääntö", "Sääntö", "Kategoria", "Kategoria", "Kategoria", "Kategoria", "1,2,3,...", "1,2,3,...",
-        "1,2,3,...", "1,2,3,...", "Kunkkumuki 1/3", "Kunkkumuki 2/3", "Kunkkumuki 3/3", "Vesiputous",
-        "Vesiputous", "Vesiputous", "<-- juo 3", "<-- juo 3", "juo 3 -->", "juo 3 -->", "Anna 3",
-        "Anna 3", "Anna 3", "Ota 3", "Ota 3", "Ota 3", "Jaa 10", "Jaa 10", "Jaa 10", "K.P.S - Häviäjä juo 3",
-        "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "Pelin lyhin juo",
-        "Pelin pisin juo", "Suppilo :D", "Suppilo :D", "Suppilo :D", "", ""
+        "Shotti", "Shotti", "Mysteerishotti", "Mysteerishotti", "Kasari :D", "Ota uusi palikka",
+        "Ota uusi palikka", "Ota uusi palikka", "Uusi palikka heikolla kädellä", "Uusi palikka heikolla kädellä",
+        "Sääntö", "Sääntö", "Sääntö", "Suunnanmuutos", "Suunnanmuutos", "Kategoria", "Kategoria",
+        "Kategoria", "1,2,3,...", "1,2,3,...", "1,2,3,...", "Skål! Kaikki juo 1", "Kunkkumuki 1/3",
+        "Kunkkumuki 2/3", "Kunkkumuki 3/3", "Vesiputous", "Vesiputous", "Vesiputous", "<-- juo 3",
+        "<-- juo 3", "juo 3 -->", "juo 3 -->", "Anna 3", "Anna 3", "Anna 3", "Ota 3", "Ota 3",
+        "Ota 3", "Jaa 10", "Jaa 10", "Jaa 10", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3",
+        "K.P.S - Häviäjä juo 3", "Kippis! Kaikki juo 3", "Pelin lyhin juo", "Pelin pisin juo",
+        "Suppilo :D", "Suppilo :D", "Suppilo :D", "Pelin vanhin jakaa 5", "Pelin nuorin jakaa 5"
       ],
       "Sosiaalinen": [
-        "Ota uusi palikka", "Ota uusi palikka", "Ota uusi palikka", "Paikkojen vaihto!", "Paikkojen vaihto!", "Paikkojen vaihto!",
-        "Kategoria", "Kategoria", "Kategoria", "Kategoria", "Sääntö", "Sääntö", "Sääntö", "Väärä käsi (3 kierrosta)",
-        "Väärä käsi (3 kierrosta)", "Väärä käsi (3 kierrosta)", "Mykkä (3 kierrosta)", "Mykkä (3 kierrosta)",
-        "Mykkä (3 kierrosta)", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "Jätkät juo",
-        "Mimmit juo", "Sinkut juo", "Varatut juo", "Vaihda biisi", "Vaihda biisi", "Vaihda biisi", "Vaihda biisi",
-        "Mielipide split", "Mielipide split", "Mielipide split", "Kuka viimeksi...", "Kuka viimeksi...",
-        "Kuka viimeksi...", "Äänestys (Esim. Kuka todennäköisemmin)", "Äänestys (Esim. Kuka todennäköisemmin)",
-        "Äänestys (Esim. Kuka todennäköisemmin)", "Nuorin jakaa 5", "Vanhin jakaa 5", "Pisin jakaa 5",
-        "Lyhin jakaa 5", "Suunnanmuutos", "Suunnanmuutos", "Suunnanmuutos", "Toast!", "Toast!",
-        "Hyräile: voittaja jakaa 10", "Hyräile: voittaja jakaa 10"
+        "Ota uusi palikka", "Ota uusi palikka", "Ota uusi palikka", "Paikkojen vaihto!",
+        "Paikkojen vaihto!", "Paikkojen vaihto!", "Kategoria", "Kategoria", "Kategoria",
+        "Kategoria", "Sääntö", "Sääntö", "Sääntö", "Väärä käsi (3 kierrosta)", "Väärä käsi (3 kierrosta)",
+        "Väärä käsi (3 kierrosta)", "Mykkä (3 kierrosta)", "Mykkä (3 kierrosta)", "Mykkä (3 kierrosta)",
+        "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "Jätkät juo",
+        "Mimmit juo", "Sinkut juo", "Varatut juo", "Vaihda biisi", "Vaihda biisi", "Vaihda biisi",
+        "Vaihda biisi", "Mielipide split", "Mielipide split", "Mielipide split", "Kuka viimeksi...",
+        "Kuka viimeksi...", "Kuka viimeksi...", "Äänestys (Esim. Kuka todennäköisemmin)",
+        "Äänestys (Esim. Kuka todennäköisemmin)", "Äänestys (Esim. Kuka todennäköisemmin)",
+        "Nuorin jakaa 5", "Vanhin jakaa 5", "Pisin jakaa 5", "Lyhin jakaa 5", "Suunnanmuutos",
+        "Suunnanmuutos", "Suunnanmuutos", "Toast!", "Toast!", "Hyräile: voittaja jakaa 10",
+        "Hyräile: voittaja jakaa 10", "Skål!", "Mysteerishotti"
       ]
     };
 
-    function näytäTehtävä() {
-      const muoto = document.getElementById('pelimuoto').value;
-      const numero = parseInt(document.getElementById('numero').value);
-      const tehtävä = (data[muoto] && data[muoto][numero - 1]) || "Virheellinen numero";
-      document.getElementById('tehtävä').textContent = tehtävä;
+    let valittuNumero = null;
+
+    function päivitäNumerot() {
+      const pelimuoto = document.getElementById('pelimuoto').value;
+      const numerotDiv = document.getElementById('numerot');
+      numerotDiv.innerHTML = ''; // Tyhjennä vanhat napit
+      valittuNumero = null;
+      document.getElementById('tehtävä').textContent = "Valitse numero nähdäksesi tehtävän";
+
+      const maxNumero = data[pelimuoto].length;
+
+      for (let i = 1; i <= maxNumero; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.onclick = () => {
+          valittuNumero = i;
+          näytäTehtävä();
+          päivitäValittuNappi();
+        };
+        numerotDiv.appendChild(btn);
+      }
     }
+
+    function päivitäValittuNappi() {
+      const numerotDiv = document.getElementById('numerot');
+      [...numerotDiv.children].forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.textContent) === valittuNumero);
+      });
+    }
+
+    function näytäTehtävä() {
+      if (valittuNumero === null) return;
+      const pelimuoto = document.getElementById('pelimuoto').value;
+      const tehtävät = data[pelimuoto];
+      const tehtäväTeksti = tehtävät[valittuNumero - 1] || "Virheellinen numero";
+      document.getElementById('tehtävä').textContent = tehtäväTeksti;
+    }
+
+    // Käynnistä aluksi napit
+    päivitäNumerot();
   </script>
 </body>
 </html>
