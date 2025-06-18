@@ -173,7 +173,7 @@
 
       /* Uutta: vakio leveys ja korkeus */
       width: 300px;
-      min-height: 75px;
+      min-height: 65px;
       display: flex;
       align-items: center; /* keskitetään teksti pystysuunnassa */
       justify-content: center; /* keskitetään myös horisontaalisesti */
@@ -191,13 +191,6 @@
       padding: 0;
       user-select: none;
       pointer-events: none; /* numero ei ota vastaan klikkejä */
-    }
-
-    .subtitle {
-      font-size: 0.9em;
-      color: #aaa;
-      margin-top: -10px;
-      margin-bottom: 20px;
     }
 
     .logo-topright {
@@ -265,12 +258,11 @@
   <!-- Jenga logo ylhäällä -->
   <img src="jengaLogo2.png" alt="Jenga logo" class="otsikkologo" />
 
-  <div class="subtitle">made by L-K</div>
-
   <div class="valinta-rivi">
     <select id="pelimuoto" onchange="resetoiPeli()">
-      <option value="HC">HC juomapeli</option>
-      <option value="Sosiaalinen">Sosiaalinen</option>
+      <option value="HC">Humalanhakuinen</option>
+      <option value="Sosiaalinen">Seurallisempi</option>
+      <option value="Mixed">Mixed</option>
     </select>
     <button onclick="resetoiPeli()">Nollaa peli</button>
     <button onclick="valitseSatunnainen()">Satunnainen</button>
@@ -290,7 +282,7 @@
         "Sääntö", "Sääntö", "Sääntö", "Suunnanmuutos", "Suunnanmuutos", "Kategoria", "Kategoria",
         "Kategoria", "1,2,3,...", "1,2,3,...", "1,2,3,...", "Skål! Kaikki juo 1", "Kunkkumuki 1/3",
         "Kunkkumuki 2/3", "Kunkkumuki 3/3", "Vesiputous", "Vesiputous", "Vesiputous", "<-- juo 3",
-        "<-- juo 3", "juo 3 -->", "juo 3 -->", "Anna 3", "Anna 3", "Anna 3", "Ota 3", "Ota 3",
+        "<-- juo 3", "juo 3 -->", "juo 3 -->", "Anna 3", "Anna 3", "Anna 3", "Ota 3",
         "Ota 3", "Jaa 10", "Jaa 10", "Jaa 10", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3",
         "K.P.S - Häviäjä juo 3", "Kippis! Kaikki juo 3", "Pelin lyhin juo", "Pelin pisin juo",
         "Suppilo :D", "Suppilo :D", "Suppilo :D", "Pelin vanhin jakaa 5", "Pelin nuorin jakaa 5"
@@ -302,13 +294,32 @@
         "Väärä käsi (3 kierrosta)", "Mykkä (3 kierrosta)", "Mykkä (3 kierrosta)", "Mykkä (3 kierrosta)",
         "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "K.P.S - Häviäjä juo 3", "Jätkät juo",
         "Mimmit juo", "Sinkut juo", "Varatut juo", "Vaihda biisi", "Vaihda biisi", "Vaihda biisi",
-        "Vaihda biisi", "Mielipide split", "Mielipide split", "Mielipide split", "Kuka viimeksi...",
+        "Mielipide split", "Mielipide split", "Mielipide split", "Kuka viimeksi...",
         "Kuka viimeksi...", "Kuka viimeksi...", "Äänestys (Esim. Kuka todennäköisemmin)",
         "Äänestys (Esim. Kuka todennäköisemmin)", "Äänestys (Esim. Kuka todennäköisemmin)",
         "Nuorin jakaa 5", "Vanhin jakaa 5", "Pisin jakaa 5", "Lyhin jakaa 5", "Suunnanmuutos",
         "Suunnanmuutos", "Suunnanmuutos", "Toast!", "Toast!", "Hyräile: voittaja jakaa 10",
         "Hyräile: voittaja jakaa 10", "Skål!", "Mysteerishotti"
-      ]
+      ],
+      "Mixed": [
+		"Ota uusi palikka", "Paikkojen vaihto", "Kategoria", "Sääntö",
+		"Jätkät juo 3", "Mimmit juo 3", "Sinkut juo 3", "Varatut juo 3",
+		"Selvin juo 3", "Humalaisin skippaa", "Mielipide split", "Kuka viimeksi..?",
+		"Kuka todennäköisemmin?", "Vesiputous", "Nuorin jakaa 5", "Vanhin jakaa 5",
+		"Lyhin jakaa 5", "Pisin jakaa 5", "Toast!", "Skål!",
+		"Jaa 10", "Shotti", "Mysteerishotti", "Suunnanmuutos",
+		"1,2,3,...", "Suppilo :DD", "Vaihda biisi", "Ota uusi heikommalla kädellä",
+		"Ota ryhmäkuva", "Anna 3", "Ota 5",
+		"Sääntö", "Opiskelijat juo", "Työlliset juo",
+		"Työttömät juo", "En ole koskaan..", "Eetsi-papan myrkky ;)",
+		"Orja / Huora", "K.P.S - Voittaja jakaa 5",
+		"Juo 10, jos etunimi alkaa S ja sukunimi R", "Röökaajat juo 5",
+		"Imitoi jotain!", "Alle 26v juo 3", "Yli 26v juo 3",
+		"Lomota tyhjäks", "Lemmikin omistajat juo 3",
+		"Kuva perheryhmään tms.!", "Soita kaverille!",
+		"Pohjoisimmasta kotoisin juo 4", "Eteläisimmästä kotoisin juo 4",
+		"Kaada torni"
+	 ]
     };
 
     const valitut = new Set();
@@ -318,7 +329,7 @@
       const numerotDiv = document.getElementById("numerot");
       numerotDiv.innerHTML = "";
 
-      for (let i = 1; i <= 52; i++) {
+      for (let i = 1; i <= 51; i++) {
         const btn = document.createElement("button");
         btn.textContent = i;
         btn.classList.add("numeronappi");
@@ -362,7 +373,7 @@
 
     function valitseSatunnainen() {
   const pelimuoto = document.getElementById("pelimuoto").value;
-  const kaikkiNumerot = Array.from({length: 52}, (_, i) => i + 1);
+  const kaikkiNumerot = Array.from({length: 51}, (_, i) => i + 1);
   const valittamattomat = kaikkiNumerot.filter(n => !valitut.has(n));
 
   if (valittamattomat.length === 0) {
