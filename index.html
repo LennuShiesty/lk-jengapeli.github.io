@@ -29,6 +29,79 @@
       margin-left: 0;
     }
 
+    /* Switch-tyyli (perus toggle) */
+    .disco-switch-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9em;
+      user-select: none;
+      z-index: 1000;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #444;
+      border-radius: 22px;
+      transition: 0.4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+
+    /* DISCO TILA */
+
+    body.disco {
+      animation: discoBG 5s linear infinite;
+      color: yellow;
+    }
+
+    @keyframes discoBG {
+      0% { background-color: #ff0000; color: white; }
+      20% { background-color: #00ff00; color: black; }
+      40% { background-color: #0000ff; color: white; }
+      60% { background-color: #ffff00; color: black; }
+      80% { background-color: #ff00ff; color: white; }
+      100% { background-color: #ff0000; color: white; }
+    }
+
     .valinta-rivi {
       display: flex;
       justify-content: center;
@@ -45,10 +118,8 @@
       border: 2px solid #666; /* harmaa reunus */
       padding: 10px;
       border-radius: 8px;
-      background-color: transparent;
+      background-color: #121212;
       box-shadow: none;
-      /* POISTETTU max-height ja overflow täältä,
-         koska skrollaus laitetaan media queryllä */
     }
 
     .numeronapit {
@@ -86,6 +157,8 @@
       justify-content: center;
     }
 
+    /* ... muuhun tyyliin ei kosketa ... */
+
     .tehtava-palikka {
       background-color: sienna;
       border: 3px solid #5a2d0c;
@@ -96,6 +169,28 @@
       max-width: 80%;
       color: white;
       box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+      position: relative;
+
+      /* Uutta: vakio leveys ja korkeus */
+      width: 300px;
+      min-height: 75px;
+      display: flex;
+      align-items: center; /* keskitetään teksti pystysuunnassa */
+      justify-content: center; /* keskitetään myös horisontaalisesti */
+      text-align: center;
+    }
+
+    .numero {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-weight: bold;
+      font-size: 1em;
+      color: white; /* valkoinen teksti */
+      background: transparent; /* EI taustaväriä */
+      padding: 0;
+      user-select: none;
+      pointer-events: none; /* numero ei ota vastaan klikkejä */
     }
 
     .subtitle {
@@ -156,6 +251,14 @@
   </style>
 </head>
 <body>
+  <div class="disco-switch-container">
+    <label class="switch">
+      <input type="checkbox" id="discoToggle" />
+      <span class="slider"></span>
+    </label>
+    <span>Disco</span>
+  </div>
+
   <!-- Oikean yläkulman logo -->
   <img src="logo2.png" alt="Logo" class="logo-topright" />
 
@@ -170,6 +273,7 @@
       <option value="Sosiaalinen">Sosiaalinen</option>
     </select>
     <button onclick="resetoiPeli()">Nollaa peli</button>
+    <button onclick="valitseSatunnainen()">Satunnainen</button>
   </div>
 
   <div class="numeronapit-container">
@@ -210,36 +314,89 @@
     const valitut = new Set();
 
     function luoNapit() {
-      const container = document.getElementById('numerot');
-      container.innerHTML = '';
+      const pelimuoto = document.getElementById("pelimuoto").value;
+      const numerotDiv = document.getElementById("numerot");
+      numerotDiv.innerHTML = "";
+
       for (let i = 1; i <= 52; i++) {
-        const btn = document.createElement('button');
+        const btn = document.createElement("button");
         btn.textContent = i;
-        btn.className = 'numeronappi';
+        btn.classList.add("numeronappi");
+
+        if (valitut.has(i)) {
+          btn.classList.add("valittu");
+        }
+
         btn.onclick = () => naytaTehtava(i, btn);
-        container.appendChild(btn);
+
+        numerotDiv.appendChild(btn);
       }
     }
 
     function naytaTehtava(numero, btn) {
-      const muoto = document.getElementById('pelimuoto').value;
-      const teht = data[muoto]?.[numero - 1] || "Virheellinen numero";
-      const tehtavaDiv = document.getElementById('tehtava');
-      tehtavaDiv.innerHTML = `<div class="tehtava-palikka">${teht}</div>`;
+      const pelimuoto = document.getElementById("pelimuoto").value;
+      const tehtavaDiv = document.getElementById("tehtava");
 
-      if (!valitut.has(numero)) {
-        valitut.add(numero);
-        btn.classList.add('valittu');
+      if (valitut.has(numero)) {
+        return;
       }
+
+      valitut.add(numero);
+      btn.classList.add("valittu");
+
+      let tehtavaTeksti = data[pelimuoto][numero - 1] || "Ei tehtävää";
+
+      tehtavaDiv.innerHTML = `
+        <div class="tehtava-palikka">
+          <div class="numero">${numero}</div>
+          ${tehtavaTeksti}
+        </div>
+      `;
     }
 
     function resetoiPeli() {
       valitut.clear();
-      document.getElementById('tehtava').innerHTML = '';
       luoNapit();
+      document.getElementById("tehtava").innerHTML = "";
     }
 
-    luoNapit();
+    function valitseSatunnainen() {
+  const pelimuoto = document.getElementById("pelimuoto").value;
+  const kaikkiNumerot = Array.from({length: 52}, (_, i) => i + 1);
+  const valittamattomat = kaikkiNumerot.filter(n => !valitut.has(n));
+
+  if (valittamattomat.length === 0) {
+    alert("Kaikki tehtävät on jo valittu!");
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * valittamattomat.length);
+  const numero = valittamattomat[randomIndex];
+
+  // Etsi nappi, joka vastaa tätä numeroa
+  const numerotDiv = document.getElementById("numerot");
+  const napit = numerotDiv.getElementsByTagName("button");
+  for (const btn of napit) {
+    if (parseInt(btn.textContent, 10) === numero) {
+      naytaTehtava(numero, btn);
+      break;
+    }
+  }
+}
+
+    
+    window.onload = () => {
+      luoNapit();
+
+      const discoToggle = document.getElementById('discoToggle');
+      discoToggle.addEventListener('change', () => {
+        if (discoToggle.checked) {
+          document.body.classList.add('disco');
+        } else {
+          document.body.classList.remove('disco');
+        }
+      });
+    };
   </script>
 </body>
 </html>
